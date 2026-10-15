@@ -1,0 +1,69 @@
+/* Above the canvas, below the header; only readable captions take the pointer */
+.layer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-content);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Placed and faded by the scene each frame (transform + opacity: no layout work) */
+.caption {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* A readable caption belongs to its project's hover area */
+.caption[data-visible='true'] {
+  pointer-events: auto;
+}
+
+/*
+ * "Visit website ↗": revealed by the project's focus (--action, 0–1, set by
+ * the scene), rising a few pixels into place. Generous padding makes it an
+ * easy target for a finger.
+ */
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  margin-top: 0.15rem;
+  padding-block: 0.7rem;
+  color: var(--c-paper);
+  opacity: var(--action, 0);
+  translate: 0 calc((1 - var(--action, 0)) * 0.4rem);
+  pointer-events: none;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.caption[data-active='true'] .action {
+  pointer-events: auto;
+}
+
+/* The arrow carries the accent; the whole link takes it on hover */
+.action > [aria-hidden] {
+  color: var(--c-red);
+}
+
+.action:hover {
+  color: var(--c-red);
+}
+
+/* No live site yet: the same reveal, in the quiet metadata colour, never a target */
+.unavailable {
+  color: var(--c-text-muted);
+}
+
+.caption[data-active='true'] .unavailable {
+  pointer-events: none;
+}
+
+/* Keyboard focus shows it at once, whatever the scene has caught up to */
+.action:focus-visible {
+  opacity: 1;
+  translate: none;
+  outline-offset: 2px;
+}

@@ -1,0 +1,66 @@
+.caption {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: start;
+  align-items: baseline;
+  column-gap: 0.85rem;
+  row-gap: 0.55rem;
+}
+
+.index {
+  color: var(--c-red);
+}
+
+/* The title as a small poster line: condensed black capitals */
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 0.95rem + 1vw, 2rem);
+  font-weight: 820;
+  font-stretch: var(--display-stretch);
+  line-height: 0.9;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  color: var(--c-paper);
+  white-space: nowrap;
+}
+
+/* Under the title, aligned with it rather than with the number */
+.category {
+  grid-column: 2;
+  color: var(--c-text-muted);
+  white-space: nowrap;
+}
+
+.extra {
+  grid-column: 2;
+}
+
+/* data-detail="false" on the caption or a container (set where space is tight): title only */
+[data-detail='false'] .category {
+  display: none;
+}
+
+/* Phones: the titles of a crowded gathering stay within their column */
+@media (max-width: 639px) {
+  [data-detail='false'] .title {
+    font-size: 1.1rem;
+  }
+}
+
+.short {
+  display: none;
+}
+
+/* Tight spots: the short title on screen, the full one kept for screen readers */
+[data-detail='false'] .short {
+  display: inline;
+}
+
+[data-detail='false'] .full {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

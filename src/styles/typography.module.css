@@ -1,0 +1,22 @@
+/*
+ * Shared type styles. Apply alongside a component's own class, e.g.
+ * cx(typography.label, styles.link). These rules only set type properties,
+ * so component classes can add layout and colour without conflicts.
+ */
+
+.label,
+.labelSmall {
+  font-family: var(--font-ui);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.label {
+  font-size: var(--text-label);
+}
+
+.labelSmall {
+  font-size: calc(var(--text-label) * 0.91);
+}

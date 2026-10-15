@@ -1,0 +1,48 @@
+/*
+ * Atmospheric light behind the 3D scene, painted as one element: a dark,
+ * warm room. Plum and burgundy give it colour, copper a little warmth, a
+ * trace of violet depth in the distance; never so much that the dark goes
+ * grey or the type loses contrast.
+ *
+ * Background layers, top to bottom:
+ *   1. grain     a print-like grain that also dithers the dark gradients,
+ *                which band visibly on 8-bit displays without it. A 128px
+ *                tile of uniform grey noise (values 115–141, centred on
+ *                mid-grey), overlay-blended so it never lifts the blacks. A
+ *                bitmap rather than an SVG filter: feTurbulence rasterises on
+ *                the main thread and stalls the intro.
+ *   2. vignette  draws the edges back toward ink
+ *   3. burgundy  the glow behind the headline
+ *   4. copper    a faint warmth low on the right
+ *   5. violet    depth, far off in the upper right
+ *   6. plum      the room's colour, across the upper left
+ *   7. charcoal  the warm graphite the headline sits in
+ *
+ * Blending with background-blend-mode (rather than a separate mix-blend-mode
+ * layer) happens once when the element is painted, so the WebGL canvas
+ * rendering above it every frame costs nothing extra to composite.
+ */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-backdrop);
+  pointer-events: none;
+  background-color: var(--c-ink);
+  background-image:
+    url('../assets/grain.png'),
+    radial-gradient(130% 100% at 50% 42%, transparent 50%, rgb(6 4 6 / 0.55) 100%),
+    radial-gradient(46% 40% at 46% 52%, color-mix(in srgb, var(--c-burgundy) 34%, transparent), transparent 72%),
+    radial-gradient(42% 36% at 88% 96%, color-mix(in srgb, var(--c-copper) 9%, transparent), transparent 75%),
+    radial-gradient(38% 34% at 82% 12%, color-mix(in srgb, var(--c-violet) 16%, transparent), transparent 72%),
+    radial-gradient(60% 55% at 10% 6%, color-mix(in srgb, var(--c-plum) 42%, transparent), transparent 74%),
+    radial-gradient(
+      100% 75% at 48% 42%,
+      color-mix(in srgb, var(--c-charcoal) 90%, transparent) 0%,
+      color-mix(in srgb, var(--c-charcoal) 45%, transparent) 45%,
+      transparent 78%
+    );
+  background-size: 128px 128px, auto, auto, auto, auto, auto, auto;
+  background-blend-mode: overlay, normal, normal, normal, normal, normal, normal;
+  /* Own compositor layer, so the intro's opacity bloom never repaints this full-screen blend */
+  will-change: opacity;
+}

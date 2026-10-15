@@ -1,0 +1,55 @@
+/*
+ * Sits under the word it marks (its parent is the positioning context),
+ * behind the letters, overlapping their lower edge as a marker would.
+ */
+.underline {
+  position: absolute;
+  z-index: -1;
+  left: -0.05em;
+  bottom: -0.1em;
+  width: calc(100% + 0.12em);
+  height: 0.42em;
+  overflow: visible;
+  color: var(--c-red);
+  fill: currentColor;
+  opacity: 0.92;
+  pointer-events: none;
+}
+
+/* The hand's path: a wide stroke that uncovers the brush shape as it advances */
+.reveal {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 32;
+  stroke-linecap: round;
+  stroke-dasharray: 1 1;
+}
+
+/* Faint streaks where the bristles carried less ink (grey: thinner, not gone) */
+.bristle {
+  fill: none;
+  stroke: #a6a6a6;
+  stroke-width: 0.55;
+  stroke-dasharray: 46 18 30 24;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    animation: draw 720ms cubic-bezier(0.6, 0.05, 0.3, 1) var(--delay, 0s) both;
+    animation-play-state: paused;
+  }
+
+  :global([data-intro='play']) .reveal {
+    animation-play-state: running;
+  }
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}

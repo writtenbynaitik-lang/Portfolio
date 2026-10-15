@@ -1,0 +1,33 @@
+.header {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: var(--z-header);
+  display: flex;
+  /* Top-aligned so the nav lines up with the signature's first line when it stacks */
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-top: max(var(--frame-y), env(safe-area-inset-top));
+  padding-inline: max(var(--gutter), env(safe-area-inset-left)) max(var(--gutter), env(safe-area-inset-right));
+  /* The bar itself shouldn't block the scene; only its links are interactive */
+  pointer-events: none;
+}
+
+.header > * {
+  pointer-events: auto;
+}
+
+/*
+ * Over the static gallery (reduced motion, no WebGL) page content scrolls
+ * beneath the header, and some previews are light: a soft scrim keeps the
+ * signature and navigation legible. Over the 3D hall it isn't needed.
+ */
+:global([data-work='static']) .header::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 -2.5rem;
+  z-index: -1;
+  background: linear-gradient(var(--c-ink) 35%, transparent);
+  pointer-events: none;
+}

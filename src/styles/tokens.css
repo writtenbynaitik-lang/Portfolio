@@ -1,0 +1,77 @@
+/*
+ * Design tokens. Every colour, type size, space and timing used by the UI
+ * comes from here. WebGL colours mirror the palette in ./palette.ts.
+ */
+:root {
+  /*
+   * Palette: a dark, warm room rather than flat black. Foundations of
+   * plum-black ink and warm graphite; atmosphere from muted plum and
+   * burgundy; light from copper, used sparingly; a muted violet only for
+   * depth in the distance. Warm ivory paper carries the type, and one coral
+   * accent marks what matters: selected words, hand-drawn details, focus
+   * and interaction. The websites on show supply every other colour.
+   */
+  --c-ink: #0e0b0d;
+  --c-charcoal: #1f1a1d;
+  --c-plum: #3b2232;
+  --c-burgundy: #5e1c2c;
+  --c-copper: #d48b4f;
+  --c-violet: #4a4170;
+  --c-paper: #f3ebdd;
+  /* Coral: bright enough for small text on the dark (about 5.4:1) */
+  --c-red: #f25c43;
+  /* Website frames: the screen behind a preview, and the browser bar above it */
+  --c-screen: #161114;
+  --c-chrome: #221b1f;
+
+  /*
+   * Paper at fixed strengths, for the text hierarchy and hairlines. Strong
+   * enough to stay legible and visible on a dimmed screen: muted text is
+   * still above 6:1, and lines are visible rather than implied.
+   */
+  --c-text-soft: rgb(243 235 221 / 0.82);
+  --c-text-muted: rgb(243 235 221 / 0.64);
+  --c-line: rgb(243 235 221 / 0.24);
+
+  /*
+   * Type: a condensed black grotesk for statements, a serif italic for the
+   * occasional contrasting word, and a quiet sans for everything you read
+   * to find your way.
+   */
+  --font-display: 'Archivo Variable', 'Arial Narrow', 'Helvetica Neue', sans-serif;
+  --font-accent: 'Instrument Serif', 'Iowan Old Style', 'Times New Roman', serif;
+  --font-ui: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+  /* Archivo's width axis: condensed for statements, poster-like */
+  --display-stretch: 68%;
+
+  /* Width-led, but capped by height so short landscape screens still fit */
+  --text-display: min(clamp(3.4rem, 0.9rem + 8.4vw, 11.5rem), 17svh);
+  --text-body: clamp(0.875rem, 0.83rem + 0.18vw, 1rem);
+  --text-label: clamp(0.6875rem, 0.6rem + 0.15vw, 0.8125rem);
+  --tracking-label: 0.2em;
+
+  /* Space */
+  --gutter: clamp(1.25rem, 0.55rem + 2.6vw, 3rem);
+  --frame-y: clamp(1.25rem, 0.8rem + 1.5vw, 2.5rem);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 240ms;
+  --dur-fade: 900ms;
+  --dur-reveal: 1150ms;
+  --dur-bloom: 2600ms;
+
+  /* Layers, back to front */
+  --z-backdrop: 0;
+  --z-scene: 1;
+  --z-content: 2;
+  --z-header: 3;
+}
+
+@media (max-width: 639px) {
+  :root {
+    /* Phones: the headline breaks onto three lines, so it can run larger */
+    --text-display: min(20vw, 6rem);
+  }
+}

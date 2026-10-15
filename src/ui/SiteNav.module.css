@@ -1,0 +1,42 @@
+.list {
+  display: flex;
+  gap: clamp(1.5rem, 1rem + 1.8vw, 3rem);
+}
+
+.link {
+  position: relative;
+  display: inline-block;
+  color: var(--c-text-soft);
+  transition: color var(--dur-fast) ease;
+}
+
+/* Larger touch target than the text, without affecting layout or the focus ring */
+.link::before {
+  content: '';
+  position: absolute;
+  inset: -1rem -0.5rem;
+}
+
+/* Hairline that draws in from the left on hover and leaves to the right */
+.link::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: -0.5em;
+  height: 1px;
+  background: currentColor;
+  scale: 0 1;
+  transform-origin: right;
+  transition: scale 420ms var(--ease-out);
+}
+
+.link:hover,
+.link:focus-visible {
+  color: var(--c-paper);
+}
+
+/* Hover only: on keyboard focus the focus ring does this job */
+.link:hover::after {
+  scale: 1 1;
+  transform-origin: left;
+}

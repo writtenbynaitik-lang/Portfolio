@@ -1,0 +1,56 @@
+.indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  color: var(--c-text-muted);
+}
+
+.label {
+  /* Optically re-centre: tracking adds trailing space after the last letter */
+  margin-inline-end: calc(var(--tracking-label) * -1);
+}
+
+.track {
+  position: relative;
+  width: 1px;
+  height: clamp(2.5rem, 1.5rem + 3vh, 4rem);
+  overflow: hidden;
+  background: var(--c-line);
+}
+
+/* A short red pulse travelling down the hairline */
+.trace {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent, var(--c-red));
+  translate: 0 -35%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .trace {
+    animation: trace 2.6s var(--ease-in-out) infinite;
+  }
+}
+
+@keyframes trace {
+  0% {
+    translate: 0 -100%;
+  }
+
+  65%,
+  100% {
+    translate: 0 100%;
+  }
+}
+
+/* Short landscape screens: a more compact cue */
+@media (max-height: 520px) and (orientation: landscape) {
+  .indicator {
+    gap: 0.625rem;
+  }
+
+  .track {
+    height: 1.75rem;
+  }
+}

@@ -1,0 +1,14 @@
+.signature {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  color: var(--c-paper);
+  white-space: nowrap;
+}
+
+/* Larger touch target than the text, without affecting layout or the focus ring */
+.signature::before {
+  content: '';
+  position: absolute;
+  inset: -1rem -0.5rem;
+}

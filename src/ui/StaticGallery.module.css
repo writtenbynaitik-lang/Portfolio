@@ -1,0 +1,168 @@
+.gallery {
+  position: relative;
+  z-index: var(--z-content);
+  padding: clamp(4rem, 8vw, 8rem) var(--gutter) clamp(6rem, 12vw, 11rem);
+}
+
+.list {
+  display: grid;
+  gap: clamp(4.5rem, 9vw, 9rem);
+  max-width: 88rem;
+  margin-inline: auto;
+}
+
+/* Different widths and offsets, alternating sides: an arrangement, not a grid of cards */
+.item {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .item:nth-child(5n + 1) {
+    width: 64%;
+    margin-inline-start: 4%;
+  }
+
+  .item:nth-child(5n + 2) {
+    width: 50%;
+    justify-self: end;
+    margin-inline-end: 6%;
+  }
+
+  .item:nth-child(5n + 3) {
+    width: 58%;
+    margin-inline-start: 16%;
+  }
+
+  .item:nth-child(5n + 4) {
+    width: 48%;
+    justify-self: end;
+  }
+
+  .item:nth-child(5n + 5) {
+    width: 42%;
+    margin-inline-start: 10%;
+  }
+}
+
+.figure {
+  display: grid;
+  gap: 1.1rem;
+  margin: 0;
+}
+
+.link {
+  display: block;
+}
+
+.action {
+  display: inline-block;
+  margin-top: 0.85rem;
+  color: var(--c-paper);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.unavailable {
+  color: var(--c-text-muted);
+}
+
+.action > [aria-hidden] {
+  color: var(--c-red);
+}
+
+.link:hover .action,
+.link:focus-visible .action {
+  color: var(--c-red);
+}
+
+.link:focus-visible {
+  outline-offset: 10px;
+}
+
+/* A linked preview takes a red edge under the pointer; without motion preferences it also lifts */
+.link:hover .frame,
+.link:focus-visible .frame {
+  box-shadow: 0 0 0 1px var(--c-red);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .link:hover .frame,
+  .link:focus-visible .frame {
+    translate: 0 -0.35rem;
+  }
+}
+
+.frame {
+  overflow: hidden;
+  border-radius: 0.375rem;
+  background: var(--c-screen);
+  /* Just enough edge to separate a dark site from the dark page */
+  box-shadow: 0 0 0 1px rgb(243 235 221 / 0.1);
+  transition:
+    box-shadow var(--dur-fast) var(--ease-out),
+    translate 600ms var(--ease-out);
+}
+
+/* Slim browser bar: three dots, no address */
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: clamp(1rem, 0.6rem + 1.1vw, 1.6rem);
+  padding-inline: 0.75rem;
+  background: var(--c-chrome);
+}
+
+.bar span {
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 50%;
+  background: var(--c-line);
+}
+
+.image,
+.placeholder {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+}
+
+.image {
+  /* The image's own ratio once it has loaded; its space reserved before then, so lazy loading never shifts the page */
+  aspect-ratio: auto 16 / 10;
+}
+
+.placeholder {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 1rem;
+  background:
+    radial-gradient(ellipse at 50% 45%, #1d1b18, #100f0d 70%),
+    #100f0d;
+}
+
+.placeholderTitle {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+  font-weight: 860;
+  font-stretch: var(--display-stretch);
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--c-paper);
+}
+
+/* Short red rule above the note */
+.placeholderNote {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  color: var(--c-text-muted);
+}
+
+.placeholderNote::before {
+  content: '';
+  width: 2rem;
+  height: 1px;
+  background: var(--c-red);
+}

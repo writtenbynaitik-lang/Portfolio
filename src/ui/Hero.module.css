@@ -1,0 +1,235 @@
+/*
+ * Two rows: the composition centred in the space that's left, and the scroll
+ * cue pinned beneath it. As a grid they can never overlap, however short the
+ * screen; at worst the hero grows taller than the viewport.
+ */
+.hero {
+  position: relative;
+  z-index: var(--z-content);
+  display: grid;
+  grid-template-rows: 1fr auto;
+  justify-items: center;
+  gap: var(--frame-y);
+  min-height: 100vh;
+  min-height: 100svh;
+  /* Top padding clears the fixed header */
+  padding: calc(var(--frame-y) + 3.5rem) var(--gutter) max(var(--frame-y), env(safe-area-inset-bottom));
+}
+
+.composition {
+  /* Second line steps right of the first: an asymmetric, editorial stagger */
+  --indent: calc(var(--text-display) * 1.35);
+
+  align-self: center;
+}
+
+/*
+ * Scrolling into the hall: the copy lifts slightly faster than the page and
+ * fades before it can reach the fixed header. --hero-exit (0–1) is set on the
+ * section by the scene's frame loop; without it (no travel) these resolve to rest.
+ * Applied to wrappers, never to elements running an intro reveal, so the two
+ * don't fight over opacity.
+ */
+.composition,
+.cue {
+  opacity: calc(1 - var(--hero-exit, 0));
+  /* Own compositor layers: the exit changes every frame while scrolling, and
+     without this the large type would be repainted each time */
+  will-change: opacity, translate;
+}
+
+.composition {
+  translate: 0 calc(var(--hero-exit, 0) * -6vh);
+}
+
+.cue {
+  /* The cue has done its job as soon as scrolling starts */
+  opacity: calc(1 - var(--hero-exit, 0) * 3);
+}
+
+/*
+ * The headline: a condensed black grotesk in capitals, poster-like, with one
+ * word set in a serif italic for contrast and marked by hand in red.
+ */
+.headline {
+  font-family: var(--font-display);
+  font-size: var(--text-display);
+  font-weight: 860;
+  font-stretch: var(--display-stretch);
+  line-height: 0.84;
+  letter-spacing: -0.012em;
+  text-transform: uppercase;
+  color: var(--c-paper);
+}
+
+.line {
+  display: block;
+}
+
+.indented {
+  padding-inline-start: var(--indent);
+}
+
+/* Words never break inside; a narrow screen wraps between them */
+.word {
+  white-space: nowrap;
+}
+
+/* The contrasting word: serif italic, lower case, a touch larger to hold its own */
+.accent {
+  font-family: var(--font-accent);
+  font-size: 1.12em;
+  font-style: italic;
+  font-weight: 400;
+  font-stretch: normal;
+  letter-spacing: -0.02em;
+  text-transform: none;
+}
+
+/* Positions the hand-drawn underline under its word */
+.marked {
+  position: relative;
+  display: inline-block;
+  isolation: isolate;
+}
+
+/*
+ * Typing. Every character is laid out from the start (so nothing shifts) and
+ * appears at its moment (--at). The caret is a pseudo-element on each
+ * character, shown from that character's moment for as long as the next one
+ * takes (--hold), so it always sits after the latest letter. Without motion
+ * preferences none of this runs: the headline is simply there.
+ */
+.char {
+  position: relative;
+}
+
+.char::after {
+  content: '';
+  position: absolute;
+  left: 100%;
+  bottom: 0.05em;
+  width: max(2px, 0.05em);
+  height: 0.74em;
+  margin-left: 0.03em;
+  background: var(--c-red);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* In the serif the caret follows its smaller x-height, sitting on the same baseline */
+.accent .char::after {
+  bottom: 0.2em;
+  height: 0.62em;
+}
+
+/* The caret before the first keystroke: an empty element at the start of the first line */
+.lead::after {
+  left: 0;
+  margin-left: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .char {
+    animation: type-in 1ms steps(1, start) var(--at) both;
+  }
+
+  .char::after {
+    animation: caret-hold var(--hold) linear var(--at);
+  }
+
+  /* Waits a beat at the start, blinking, before the first keystroke */
+  .lead::after {
+    animation: caret-blink 0.45s linear var(--at);
+  }
+
+  /* After the last letter it blinks twice and fades away */
+  .final::after {
+    animation: caret-settle 1.9s linear var(--at);
+  }
+
+  /* Held at the start until the intro plays (after the animation shorthands, which reset it) */
+  .char,
+  .char::after {
+    animation-play-state: paused;
+  }
+
+  :global([data-intro='play']) .char,
+  :global([data-intro='play']) .char::after {
+    animation-play-state: running;
+  }
+}
+
+@keyframes type-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes caret-hold {
+  from,
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes caret-blink {
+  0%,
+  55% {
+    opacity: 1;
+  }
+
+  56%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes caret-settle {
+  0%,
+  26% {
+    opacity: 1;
+  }
+
+  27%,
+  46% {
+    opacity: 0;
+  }
+
+  47%,
+  72% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.cue {
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 1023px) {
+  .composition {
+    --indent: calc(var(--text-display) * 0.8);
+  }
+}
+
+@media (max-width: 639px) {
+  .composition {
+    --indent: calc(var(--text-display) * 0.5);
+  }
+
+  .headline {
+    line-height: 0.9;
+  }
+}
+
+/* Short landscape screens: tighten the vertical rhythm */
+@media (max-height: 520px) and (orientation: landscape) {
+  .hero {
+    padding-top: calc(var(--frame-y) + 2.25rem);
+  }
+}

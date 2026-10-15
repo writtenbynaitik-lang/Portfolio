@@ -1,0 +1,67 @@
+/*
+ * Intro reveal primitives.
+ *
+ * Elements render in their final, visible state by default; motion is only
+ * layered on when the visitor allows it, so reduced-motion users never get
+ * stuck with hidden content. Each animation holds its first keyframe until an
+ * ancestor sets data-intro="play". Timing comes from --delay / --duration,
+ * set inline via revealTiming() in ./intro.ts.
+ *
+ * Keyframes use the individual `translate` / `scale` properties so they
+ * compose with any `transform` an element already has.
+ */
+
+@media (prefers-reduced-motion: no-preference) {
+  .fade,
+  .rise,
+  .bloom {
+    animation-delay: var(--delay, 0s);
+    animation-fill-mode: both;
+    animation-timing-function: var(--ease-out);
+    animation-play-state: paused;
+  }
+
+  .fade {
+    animation-name: fade;
+    animation-duration: var(--duration, var(--dur-fade));
+  }
+
+  /* Pair with a parent that clips overflow: the content slides up into view. */
+  .rise {
+    animation-name: rise;
+    animation-duration: var(--duration, var(--dur-reveal));
+  }
+
+  .bloom {
+    animation-name: bloom;
+    animation-duration: var(--duration, var(--dur-bloom));
+    animation-timing-function: var(--ease-in-out);
+  }
+
+  :global([data-intro='play']) .fade,
+  :global([data-intro='play']) .rise,
+  :global([data-intro='play']) .bloom {
+    animation-play-state: running;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+    translate: 0 0.4rem;
+  }
+}
+
+@keyframes rise {
+  from {
+    translate: 0 108%;
+  }
+}
+
+/* Opacity only: ending a scale animation on a full-screen layer forces a
+   costly re-raster, and the camera dolly already supplies the push-in. */
+@keyframes bloom {
+  from {
+    opacity: 0;
+  }
+}
